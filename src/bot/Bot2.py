@@ -1,6 +1,6 @@
 from src.bot.Commands import Commands
 from src.command.Idle import Idle
-from src.utils.Pathfinder2 import Pathfinder
+from src.bot.Pathfinder3 import Pathfinder
 
 
 class Bot:
@@ -25,10 +25,12 @@ class Bot:
         self.outOfTenSum = 0
         self.myLocation = ''
         self.state = 'exploration'
+        self.openJunks = ''
+        self.goal = ''
+        self.firstHarvest = True
     def set_player_id(self, player_id):
         self.player_id = player_id
         self.commands = Commands(player_id)
-
     def get_name(self):
         raise NotImplementedError
 
