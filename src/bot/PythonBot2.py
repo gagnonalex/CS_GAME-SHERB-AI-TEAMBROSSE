@@ -47,6 +47,7 @@ class PythonBot2(Bot):
         direction = self.pathfinder.get_next_direction(myLocation, goalJunk)
         carrying = self.character_state['carrying']
 
+<<<<<<< HEAD
         print('state')
         print(self.state)
 
