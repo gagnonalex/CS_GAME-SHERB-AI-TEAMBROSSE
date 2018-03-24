@@ -43,22 +43,31 @@ class PythonBot2(Bot):
             # print('bot', bot['name'], 'at', lengthBase, 'from my base')
             # print('bot', bot['name'], 'at', lengthBase, 'from me')
 
-        goal = goalJunk
-
-        direction = self.pathfinder.get_next_direction(self.character_state['location'], goal)
+        direction = self.pathfinder.get_next_direction(myLocation, goalJunk)
         carrying = self.character_state['carrying']
         print('carry', carrying)
         # print(direction)
 
         self.wasCarrying = carrying
+
+        if direction == None and myLocation == goalJunk and carrying == 0:
+            print('grabing')
+            return self.commands.collect()
+        elif (carrying > 0):
+            direction = None
+            direction = self.pathfinder.get_next_direction(myLocation, self.myBase)
+            print('going back to the base')
+            #print('grab', carrying - self.wasCarrying)
+            if direction == None and myLocation == self.myBase:
+                print('try storing?')
+                print(myLocation)
+                print(self.myBase)
+                return self.commands.store()
+
         if direction:
+            print('is moving!')
             return self.commands.move(direction)
         else:
-            if (carrying == 0, direction == None):
-                print('grabing')
-                return self.commands.collect()
-            elif (carrying > 0):
-                print('grab', carrying - self.wasCarrying)
-            else:
-                return self.commands.idle()
+            return self.commands.idle()
+
 
