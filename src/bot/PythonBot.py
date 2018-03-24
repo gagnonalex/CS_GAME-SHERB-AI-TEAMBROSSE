@@ -15,7 +15,7 @@ class PythonBot(Bot):
 
         goal = (1, 1)
 
-        direction = self.pathfinder.get_next_direction(self.character_state['location'], (1,1))
+        direction = self.pathfinder.get_next_direction(self.character_state['location'], (other_bots[0]['location']))
 
         if direction:
             return self.commands.move(direction)

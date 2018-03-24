@@ -20,13 +20,17 @@ class PythonBot2(Bot):
         self.myBase = self.character_state['base']
         self.openJunks = self.junks
 
+
+
         # print('junk', self.junks)
         # print('spike', self.spikes)
         # print('grassList', self.grassList)
 
     def turn(self, game_state, character_state, other_bots):
         super().turn(game_state, character_state, other_bots)
-
+        self.harvestTimes = max(1,self.harvestTimes-character_state['respawn'])
+        print('carac state')
+        print(character_state)
         self.cptTurn += 1
         if self.cptTurn == 1:
             self.firstTurn(game_state, character_state, other_bots)
@@ -96,7 +100,12 @@ class PythonBot2(Bot):
             else :
                 if self.myLocation == self.goal :
                     harvestCpt += 1
-                    return self.commands.collect()
+                    if self.harvestCpt < self.harvestTimes*self.goalLen :
+
+                    else :
+
+                        return self.commands.collect()
+
 
             direction = self.pathfinder.get_next_direction(self.myLocation, self.goal)
 
@@ -146,6 +155,8 @@ class PythonBot2(Bot):
                     self.outOfTenDig = 0
                     self.junkIndex +=1
 
+        if character_state['spawn'] ==1 :
+            harvestTimes -=1
         if direction:
             print('is moving!')
             return self.commands.move(direction)
