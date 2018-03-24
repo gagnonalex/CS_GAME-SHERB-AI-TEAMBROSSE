@@ -22,8 +22,9 @@ class Bot:
         self.visitedJunk = []
         self.junkIndex = 0
         self.outOfTenDig = 0
+        self.outOfTenSum = 0
         self.myLocation = ''
-
+        self.state = 'exploration'
     def set_player_id(self, player_id):
         self.player_id = player_id
         self.commands = Commands(player_id)
