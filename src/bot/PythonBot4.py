@@ -2,7 +2,7 @@ from src.bot.Bot2 import Bot
 from src.symbols.ObjectSymbols import ObjectSymbols
 
 
-class PythonBot2(Bot):
+class PythonBot4(Bot):
 
     def __init__(self):
         super().__init__()
@@ -33,16 +33,40 @@ class PythonBot2(Bot):
         self.junks = self.pathfinder.junks
         goalJunk = self.junks[self.junkIndex]
         myLocation = self.character_state['location']
+        self.myLocation = myLocation
         lengthJunk = self.pathfinder.astar_path_length(myLocation, goalJunk)
         lengthBase = self.pathfinder.astar_path_length(myLocation, self.myBase)
         # print('junk at', lengthJunk)
         # print('base at', lengthBase)
         for bot in self.other_bots:
             botLocation = bot['location']
+            # print(botLocation)
+            # print(botLocation[0])
+            # print(botLocation[1])
+            print('myLocation', self.myLocation)
+            print(self.myLocation[0])
+            print(self.myLocation[1])
             lengthBase = self.pathfinder.astar_path_length(botLocation, self.myBase)
-            lengthBase = self.pathfinder.astar_path_length(botLocation, myLocation)
+            lengthBase = self.pathfinder.astar_path_length(botLocation, self.myLocation)
             # print('bot', bot['name'], 'at', lengthBase, 'from my base')
             # print('bot', bot['name'], 'at', lengthBase, 'from me')
+            if abs(botLocation[0] - self.myLocation[0]) == 1 and botLocation[1] == self.myLocation[1]:
+                print('try attack 0 !!!!!!!!!!!!!!!!!!!!!!')
+                print(botLocation)
+                print(self.myLocation)
+                if(botLocation[0] - self.myLocation[0]) == 1:
+                    return self.commands.attack('S')
+                else:
+                    return self.commands.attack('N')
+
+            elif abs(botLocation[1] - self.myLocation[1]) == 1 and botLocation[0] == self.myLocation[0]:
+                print('try attack 1 !!!!!!!!!!!!!!!!!!!!!!!')
+                print(botLocation)
+                print(self.myLocation)
+                if(botLocation[1] - self.myLocation[1]) == 1:
+                    return self.commands.attack('E')
+                else:
+                    return self.commands.attack('W')
 
         direction = self.pathfinder.get_next_direction(myLocation, goalJunk)
         carrying = self.character_state['carrying']
@@ -52,7 +76,7 @@ class PythonBot2(Bot):
 
         self.wasCarrying = carrying
 
-        if  myLocation == goalJunk and self.outOfTenDig <10:
+        if  myLocation == goalJunk and self.outOfTenDig <2:
             # print('grabing')
             self.outOfTenDig+=1
             return self.commands.collect()
@@ -68,7 +92,7 @@ class PythonBot2(Bot):
         #         # print(myLocation)
         #         # print(self.myBase)
         #         return self.commands.store()
-        elif (self.outOfTenDig ==10):
+        elif (self.outOfTenDig ==2):
             # print('******************* 10 finishm now nxt junk')
             self.visitedJunk.append(self.junks[self.junkIndex])
             # if self.junks[self.junkIndex+1] in self.visitedJunk:
@@ -78,7 +102,7 @@ class PythonBot2(Bot):
             self.junkIndex +=1
 
         if direction:
-            print('is moving!')
+            # print('is moving!')
             return self.commands.move(direction)
         else:
             return self.commands.idle()
