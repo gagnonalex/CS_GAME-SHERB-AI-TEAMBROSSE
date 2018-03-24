@@ -16,32 +16,49 @@ class PythonBot2(Bot):
         self.junks = self.pathfinder.junks
         self.spikes = self.pathfinder.spikes
         self.grassList = self.pathfinder.grassList
+        self.myBase = self.character_state['base']
 
-        print('junk', self.junks)
-        print('spike', self.spikes)
-        print('grassList', self.grassList)
+        # print('junk', self.junks)
+        # print('spike', self.spikes)
+        # print('grassList', self.grassList)
 
     def turn(self, game_state, character_state, other_bots):
         super().turn(game_state, character_state, other_bots)
 
         self.cptTurn += 1
-        print(self.cptTurn)
         if self.cptTurn == 1:
             self.firstTurn(game_state, character_state, other_bots)
 
         self.junks = self.pathfinder.junks
         goalJunk = self.junks[0]
-        lengthJunk = self.pathfinder.astar_path_length(self.character_state['location'], goalJunk)
-        print('junk at', lengthJunk)
-        print(self.character_state)
-        length_base = self.pathfinder.astar_path_length(self.character_state['location'], self.character_state['base'])
+        myLocation = self.character_state['location']
+        lengthJunk = self.pathfinder.astar_path_length(myLocation, goalJunk)
+        lengthBase = self.pathfinder.astar_path_length(myLocation, self.myBase)
+        # print('junk at', lengthJunk)
+        # print('base at', lengthBase)
+        for bot in self.other_bots:
+            botLocation = bot['location']
+            lengthBase = self.pathfinder.astar_path_length(botLocation, self.myBase)
+            lengthBase = self.pathfinder.astar_path_length(botLocation, myLocation)
+            # print('bot', bot['name'], 'at', lengthBase, 'from my base')
+            # print('bot', bot['name'], 'at', lengthBase, 'from me')
 
-
-        goal = (1, 1)
+        goal = goalJunk
 
         direction = self.pathfinder.get_next_direction(self.character_state['location'], goal)
+        carrying = self.character_state['carrying']
+        print('carry', carrying)
+        # print(direction)
+
+        self.wasCarrying = carrying
         if direction:
             return self.commands.move(direction)
         else:
-            return self.commands.idle()
+            if (carrying == 0, direction == None):
+                print('grabing')
+                return self.commands.collect()
+            elif (carrying > 0):
+                print('grab', carrying - self.wasCarrying)
+            else:
+                return self.commands.idle()
 

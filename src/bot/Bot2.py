@@ -16,6 +16,9 @@ class Bot:
         self.spikes = []
         self.grassList = []
         self.cptTurn = 0
+        # self.carrying = 0
+        self.wasCarrying = 0
+        self.myBase = ''
 
     def set_player_id(self, player_id):
         self.player_id = player_id
