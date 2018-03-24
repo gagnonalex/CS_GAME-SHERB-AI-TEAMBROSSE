@@ -12,9 +12,11 @@ class PythonBot(Bot):
 
     def turn(self, game_state, character_state, other_bots):
         super().turn(game_state, character_state, other_bots)
+
         goal = (1, 1)
 
         direction = self.pathfinder.get_next_direction(self.character_state['location'], goal)
+
         if direction:
             return self.commands.move(direction)
         else:
