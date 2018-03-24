@@ -29,8 +29,9 @@ class PythonBot2(Bot):
         if self.cptTurn == 1:
             self.firstTurn(game_state, character_state, other_bots)
 
+
         self.junks = self.pathfinder.junks
-        goalJunk = self.junks[0]
+        goalJunk = self.junks[self.junkIndex]
         myLocation = self.character_state['location']
         lengthJunk = self.pathfinder.astar_path_length(myLocation, goalJunk)
         lengthBase = self.pathfinder.astar_path_length(myLocation, self.myBase)
@@ -45,29 +46,39 @@ class PythonBot2(Bot):
 
         direction = self.pathfinder.get_next_direction(myLocation, goalJunk)
         carrying = self.character_state['carrying']
-        print('carry', carrying)
-        # print(direction)
+
+        print('longeur des junks')
+        print(self.junks)
 
         self.wasCarrying = carrying
 
-        if direction == None and myLocation == goalJunk and carrying == 0:
-            print('grabing')
+        if  myLocation == goalJunk and self.outOfTenDig <10:
+            # print('grabing')
+            self.outOfTenDig+=1
             return self.commands.collect()
-        elif (carrying > 0):
-            direction = None
-            direction = self.pathfinder.get_next_direction(myLocation, self.myBase)
-            print('going back to the base')
-            #print('grab', carrying - self.wasCarrying)
-            if direction == None and myLocation == self.myBase:
-                print('try storing?')
-                print(myLocation)
-                print(self.myBase)
-                return self.commands.store()
+
+        # elif (carrying > 0 and self.outOfTenDig <10):
+        #
+        #     direction = None
+        #     #  direction = self.pathfinder.get_next_direction(myLocation, self.myBase)
+        #     # print('going back to the base')
+        #     #print('grab', carrying - self.wasCarrying)
+        #     if direction == None and myLocation == self.myBase:
+        #         # print('try storing?')
+        #         # print(myLocation)
+        #         # print(self.myBase)
+        #         return self.commands.store()
+        elif (self.outOfTenDig ==10):
+            print('******************* 10 finishm now nxt junk')
+            self.visitedJunk.append(self.junks[self.junkIndex])
+            if self.junks[self.junkIndex+1] in self.visitedJunk:
+                print('DEJA VISITER DUDE')
+            self.junkIndex += 1
+            self.outOfTenDig = 0
+            self.junkIndex +=1
 
         if direction:
             print('is moving!')
             return self.commands.move(direction)
         else:
             return self.commands.idle()
-
-

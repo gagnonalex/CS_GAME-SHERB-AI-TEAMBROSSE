@@ -19,6 +19,10 @@ class Bot:
         # self.carrying = 0
         self.wasCarrying = 0
         self.myBase = ''
+        self.visitedJunk = []
+        self.junkIndex = 0
+        self.outOfTenDig = 0
+        self.myLocation = ''
 
     def set_player_id(self, player_id):
         self.player_id = player_id

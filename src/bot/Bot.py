@@ -12,6 +12,10 @@ class Bot:
         self.other_bots = None
         self.commands = None
         self.pathfinder = Pathfinder()
+        self.visitedJunk = []
+        self.junkIndex = 0
+        self.outOfTenDig = 0
+        self.myLocation = ''
 
     def set_player_id(self, player_id):
         self.player_id = player_id
